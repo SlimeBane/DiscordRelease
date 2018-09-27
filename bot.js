@@ -8,7 +8,7 @@ const schedule = require('node-schedule');
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const fdays = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const d = new Date();
+d = new Date();
 const fs = require('fs');
 
 
@@ -517,7 +517,7 @@ function execComand(inputMessage){
     if (message.substring(0, 1) === '!') {
         let args = message.substring(1).split(' ');
         let cmd = args[0];
-
+        d = new Date();
         args = args.splice(1);
         switch(cmd) {
             // !ping
