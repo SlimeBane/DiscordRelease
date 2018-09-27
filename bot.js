@@ -359,16 +359,11 @@ function getMessage(day, month, data){
                     //console.log(rruleyear ,rrulemonth, rruleday.substring(0, rruleday.length-1))  
                     //console.log(parsed)
 
-                    if(day === 20){
-                        console.log(rruleyear, rrulemonth, rruleday, d.getFullYear(), month, day)
-                    }
-
-                    let customDate = new Date(d.getFullYear(), month, day);
                     let weekdaystring = parsed[0].split(' ')[3];
-                    if(customDate.getDay() === getWeekDay(weekdaystring)){
+                    if(currentDate.getDay() === getWeekDay(weekdaystring)){
                         //console.log('weekdays are equal')
                         // make sure the repeat end occurs after currentDate
-                        if(rruleyear > d.getFullYear()){
+                        if(rruleyear > currentDate.getFullYear()){
                             console.log('yaaay');
                             console.log("Conference",
                             ev.summary,
@@ -386,7 +381,7 @@ function getMessage(day, month, data){
                             console.log("year based")
                         }
                         
-                        else if(rrulemonth > month && rruleyear === d.getFullYear()){
+                        else if(rrulemonth > month && rruleyear === currentDate.getFullYear()){
                             console.log('yaaay');
                             console.log("Conference",
                             ev.summary,
@@ -404,7 +399,7 @@ function getMessage(day, month, data){
                             i++;
                             console.log('month based')
                         }
-                        else if(rruleday > day && rrulemonth === month && rruleyear === d.getFullYear()){
+                        else if(rruleday > day && rrulemonth === month && rruleyear === currentDate.getFullYear()){
                             console.log('yaaay');
                             console.log("Conference",
                             ev.summary,
