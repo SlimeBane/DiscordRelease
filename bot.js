@@ -322,7 +322,11 @@ function startDateisBigger(startDate, currentDate){
 // Gets all the lessons from the calendar and returns a string
 function getMessage(day, month, data){
 
-    console.log('Enter get msg function with day ', day, ' and month ', month)
+    console.log('Enter get msg function with day ', day, ' and month ', month);
+    if(day > 31 || month > 11 ||month < 0 ||day < 1){
+        var nils = "Nils geeft een slecht voorbeeld";
+        return nils
+    }
     let arr = [];
     let txt = '```css\n';
     let i = 0;
