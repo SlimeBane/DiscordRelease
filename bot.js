@@ -502,15 +502,21 @@ function execComand(inputMessage){
     console.log(message);
     //console.log(inputMessage.channel)
     if(inputMessage.isMentioned(bot.user)){
+        console.log(message);
+        console.log(message.split(' ').length);
+        if(message.split(' ').length !== 2){
+            inputMessage.channel.send('Hi how can I help you?\nFor help mention me and type \'help\'.');
+            return true;
+        }
         if(message.split(' ')[1].toLowerCase() === 'help'){
             inputMessage.channel.send('Command List:');
             inputMessage.channel.send('!les (optional: [Date])\n!les week (optional: [Date])\n!les morgen\n!les add [Date] [Message]\n!les [\'rm\' || \'remove\' || \'del\' || \'delete\'] [Date]')
             inputMessage.channel.send('!deadline add [Time + Date] [Vak] [Message]\n!deadline ls \n!deadline [\'rm\' || \'remove\' || \'del\' || \'delete\'] [Time + Date]\n!deadline vak');
-            inputMessage.channel.send('Date is always in this format: day-month.\nTime + Date is always in this format: minute-hour-day-month[optional: -year]. ')
+            inputMessage.channel.send('Date is always in this format: day-month.\nTime + Date is always in this format: minute-hour-day-month[optional: -year]. ');
             return true;
         }
         else{
-            inputMessage.channel.send('Hi how can I help you?\nFor help mention me and type \'help\'.')
+            inputMessage.channel.send('Hi how can I help you?\nFor help mention me and type \'help\'.');
             return true;
         }
     }
@@ -572,7 +578,7 @@ function execComand(inputMessage){
                         else{
                             today += msg;
                         }
-                        inputMessage.channel.send(today)
+                        inputMessage.channel.send(today);
                         return true;
                     });
                 }
@@ -609,7 +615,7 @@ function execComand(inputMessage){
 
                                 inputMessage.channel.send(today);
                             });
-                            console.log('done')
+                            console.log('done');
                             return true;
                         }
                         if(extra[0] === 'morgen'){
@@ -634,13 +640,13 @@ function execComand(inputMessage){
                                 console.log(msg);
 
                                 inputMessage.channel.send(today);
-                                console.log('done')
+                                console.log('done');
                                 return true;
                             });
                         }
                         if(extra[0] === 'week'){
                             let maandag = getMaandag();
-                            console.log('in extra === week')
+                            console.log('in extra === week');
                             ical.fromURL(calendar.urls[0].url, {}, function(err, data) {
                                 let today = 'Lesweek: (';
                                 today += getMaandag();
