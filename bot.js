@@ -10,6 +10,7 @@ const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
 const fdays = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 d = new Date();
 const fs = require('fs');
+const MessageHandler = require('./Message');
 
 
 var jobs = [];
@@ -53,72 +54,12 @@ bot.on('ready', () => {
 
 bot.login(auth.token);
 
-// Returns index of weekday in the same order as Date.getDay()
-function getWeekDay(string ){
-    //console.log(string)
-    for (let i=0; i<fdays.length; i++){
-        if(fdays[i] === string){
-            //console.log(i)
-            return i;
-        }
-    }
-    return -1;
-}
 
 // Returns Monday of this week
-function getMaandag(){
-    let weekdag = d.getDay();
-    weekdag--;
-    if(weekdag === -1){
-        weekdag += 7
-    }
-    return d.getDate() - weekdag;
-    
-}
 
-// Returns Monday of the week in day, month
-function getMaandagFromAny(day, month){
-    console.log(day, month);
-    let customDate = new Date(d.getFullYear(), month-1, day);
-    console.log(customDate);
-    let weekdag = customDate.getDay();
-    weekdag--;
-    if(weekdag === -1){
-        weekdag += 7;
-    }
-    console.log(weekdag, day);
-    return day - weekdag;
-}
-
-// Calculates if the given year is a leap year
-function schrikkeljaar(jaar){
-    if(jaar % 4 === 0){
-        if(jaar % 100 === 0){
-            if(jaar % 400 === 0){
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
-        else{
-            return true;
-        }
-    }
-    return false;
-    
-}
 
 // Returns index of months array from the full english name
-function getMonthFromString(month){
-    let partMonth = month.substring(0,3);
-    for(let i=0; i<months.length; i++){
-        if(months[i] === partMonth){
-            return i;
-        }
-    }
-    return -1;
-}
+
 
 function writeDeadline(year, month, day, hour, minute, msg, vak, channelID, userID){
     let data = fs.readFileSync('Deadlines.txt', 'utf-8');
@@ -306,193 +247,25 @@ function clearEdits(){
 
 }
 
-// returns true if the startDate (of an event) is later than the currentDate
-function startDateisBigger(startDate, currentDate){
-    if(startDate.getFullYear() > currentDate.getFullYear()){
-        return true;
-    }
-    if(startDate.getFullYear() === currentDate.getFullYear() && startDate.getMonth() > currentDate.getMonth()){
-        return true;
-    }
-    if(startDate.getFullYear() === currentDate.getFullYear() && startDate.getMonth() === currentDate.getMonth() && startDate.getDate() > currentDate.getDate()){
-        return true;
-    }
-}
-
-// Gets all the lessons from the calendar and returns a string
-function getMessage(day, month, data){
-
-    console.log('Enter get msg function with day ', day, ' and month ', month);
-    if(day > 31 || month > 11 ||month < 0 ||day < 1){
-        var nils = "Nils geeft een slecht voorbeeld";
-        return nils
-    }
-    let arr = [];
-    let txt = '```css\n';
-    let i = 0;
-    let currentDate = new Date(d.getFullYear(), month, day);
-    if (currentDate < d){
-        currentDate.setFullYear(d.getFullYear()+1)
-    }
-    // Go over every event.
-    for (let k in data){
-        if (data.hasOwnProperty(k)) {
-            // console.log('in data')
-            let ev = data[k];
-            // Make sure it has a start date 
-            if(ev.start == null){
+// Calculates if the given year is a leap year
+function schrikkeljaar(jaar){
+    if(jaar % 4 === 0){
+        if(jaar % 100 === 0){
+            if(jaar % 400 === 0){
+                return true;
             }
             else{
-                // if the startDate occurs after our date, ignore it
-                if(startDateisBigger(ev.start, currentDate)){
-                    //console.log(ev.summary, 'started late at ', ev.start.getDate(), ev.start.getMonth())
-                    continue;
-                }
-                let line = '';
-                // if it has a reccurance rule, find untill when it last and that the day of the week corresponds with this day
-                if(ev.rrule != undefined){
-                    let rrule = ev.rrule.toText();
-                    let parsed = rrule.split('until'); 
-                    let rrulemonth = getMonthFromString(parsed[1].split(' ')[1]);
-                    let rruleday = parseInt(parsed[1].split(' ')[2].split(',')[0]);
-                    let rruleyear = parseInt(parsed[1].split(' ')[3]);
-                    //console.log(rruleyear ,rrulemonth, rruleday.substring(0, rruleday.length-1))  
-                    //console.log(parsed)
-
-                    let weekdaystring = parsed[0].split(' ')[3];
-                    if(currentDate.getDay() === getWeekDay(weekdaystring)){
-                        //console.log('weekdays are equal')
-                        // make sure the repeat end occurs after currentDate
-                        if(rruleyear > currentDate.getFullYear()){
-                            console.log('yaaay');
-                            console.log("Conference",
-                            ev.summary,
-                            'is in',
-                            ev.location);
-
-                            line += ev.summary;
-                            line += " at ";
-                            let tim = ev.start.toString().substring(16, 21);
-                            line += ':' + tim;
-                            line += '\n';
-                            
-                            arr[i] = line;
-                            i++;
-                            console.log("year based")
-                        }
-                        
-                        else if(rrulemonth > month && rruleyear === currentDate.getFullYear()){
-                            console.log('yaaay');
-                            console.log("Conference",
-                            ev.summary,
-                            'is in',
-                            ev.location);
-
-                            line += ev.summary;
-                            line += " at ";
-                            // var temp = ev.start
-                            let tim = ev.start.toString().substring(16, 21);
-                            line += ':' + tim;
-                            line += '\n';
-                            
-                            arr[i] = line;
-                            i++;
-                            console.log('month based')
-                        }
-                        else if(rruleday > day && rrulemonth === month && rruleyear === currentDate.getFullYear()){
-                            console.log('yaaay');
-                            console.log("Conference",
-                            ev.summary,
-                            'is in',
-                            ev.location);
-
-                            line += ev.summary;
-                            line += " at ";
-                            // var temp = ev.start
-                            let tim = ev.start.toString().substring(16, 21);
-                            line += ':' + tim;
-                            line += '\n';
-                            
-                            arr[i] = line;
-                            i++;
-                            console.log(rruleday, day);
-                            console.log('Day based')
-                        }
-                        
-                    }
-                }
-                
-                // if the event starts at currentDate, add to lessons
-                if(ev.start.getDate() === day && ev.start.getMonth() === month){
-                    console.log('yaaay');
-                    console.log("Conference",
-                    ev.summary,
-                    'is in',
-                    ev.location,
-                    'with rec ID',
-                    ev.dtstamp);
-
-                    line += ev.summary;
-                    line += " at ";
-                    // var temp = ev.start
-                    let tim = ev.start.toString().substring(16, 21);
-                    line += ':' + tim;
-                    line += '\n';
-
-                    
-
-                    arr[i] = line;
-                    i++;
-                }
-            }
-        }       
-    }
-    
-    let sortedarr = [];
-    console.log(arr);
-    for (let l = 0; l < arr.length; l++){
-        let time = arr[l].substring(arr[l].length - 6, arr[l].length - 1).split(':');
-        console.log(time);
-        let hour = parseInt(time[0]);
-        let minute = parseInt(time[1]);
-
-        if(sortedarr.length === 0){
-            sortedarr[0] = arr[l];
-        }
-        let added = false;
-        for (i=0; i < sortedarr.length; i++){
-            let elem = sortedarr[i];
-            let elemTime = elem.substring(elem.length - 6, elem.length - 1).split(':');
-            let elemHour = parseInt(elemTime[0]);
-            let elemMinute = parseInt(elemTime[1]);
-
-            console.log(hour, elemHour);
-            if(hour === elemHour && minute === elemMinute){
-                added = true;
-                break;
-            }
-            if(hour < elemHour){
-                sortedarr.splice(i, 0, arr[l]);
-                added = true;
-                console.log('addde', arr[l]);
-                break;
+                return false;
             }
         }
-        if(!added && l !== 0){
-            sortedarr.push(arr[l]);
-            //console.log(arr[l]);
+        else{
+            return true;
         }
-        
     }
-    
-    for (let i = 0; i < sortedarr.length; i++){
-        txt += sortedarr[i]
-    }
-    txt += '```';
-    console.log(sortedarr);
-    console.log(txt);
-    return txt;
+    return false;
+
 }
+
 
 function execComand(inputMessage){
     // Our bot needs to know if it will execute a command
@@ -539,7 +312,6 @@ function execComand(inputMessage){
                         break;
                     case 4:
 
-
                     default:
                         if(args[0] === 'add'){
                             let time = args[1].split('-');
@@ -568,15 +340,25 @@ function execComand(inputMessage){
             case 'les':
                 console.log(args.length);
                 if(args.length === 0){
+                    // les vandaag
                     ical.fromURL(calendar.urls[0].url, {}, function(err, data) {
                         console.log('No extra Arguments');
-                        let today = 'Vandaag:\n';
-                        let msg = getMessage(d.getDate(), d.getMonth(), data).toString();
+                        let today = d.getDate().toString();
+                        today += '- ';
+                        today += months[d.getMonth()];
+                        today += ':\n';
+                        let date = d;
+                        let msg = MessageHandler.getMessage(date, data).toString();
                         if(msg === '```css\n```'){
                             today += "Geen les!\n ╯°□°）╯┻━┻"
                         }
                         else{
                             today += msg;
+                        }
+                        let edit = getEdits(d.getDate(), d.getMonth()+1);
+                        if(edit !== ''){
+                            today += "Edit: ";
+                            today += edit
                         }
                         inputMessage.channel.send(today);
                         return true;
@@ -589,16 +371,17 @@ function execComand(inputMessage){
                         console.log(extra);
                         if(extra.length === 2){
                             ical.fromURL(calendar.urls[0].url, {}, function(err, data) {
-
-                                let dag = extra[0];
-                                let maand = extra[1];
+                                let dag = parseInt(extra[0]);
+                                let maand = parseInt(extra[1]);
+                                let date = new Date(d.getFullYear(), maand-1, dag);
                                 let today = 'Les op ';
-                                today += dag;
+                                today += date.getDate();
                                 today += "-";
-                                today += maand;
+                                today += months[date.getMonth()];
                                 today += ":\n";
-                                console.log(dag,maand-1);
-                                let msg = getMessage(dag, maand-1, data).toString();
+                                console.log(dag, maand-1);
+
+                                let msg = MessageHandler.getMessage(date, data).toString();
                                 if(msg === '```css\n```'){
                                     today += "Geen les!\n ╯°□°）╯┻━┻"
                                 }
@@ -621,21 +404,48 @@ function execComand(inputMessage){
                         if(extra[0] === 'morgen'){
                             ical.fromURL(calendar.urls[0].url, {}, function(err, data) {
 
-                                let dag = d.getDate()+1;
-                                let maand = d.getMonth()+1;
+                                let date = new Date();
+                                date.setDate(date.getDate() + 1);
+
                                 let today = 'Les morgen (';
-                                today += dag;
+                                today += date.getDate();
                                 today += "-";
-                                today += maand;
+                                today += months[date.getMonth()];
                                 today += "):\n";
-                                let msg = getMessage(dag, maand-1, data).toString();
+                                let msg = MessageHandler.getMessage(date, data).toString();
                                 if(msg === '```css\n```'){
                                     today += "Geen les!\n ╯°□°）╯┻━┻"
                                 }
                                 else{
                                     today += msg;
                                 }
-                                today += getEdits(dag, maand);
+                                today += getEdits(date.getDate(), date.getMonth()+1);
+
+                                console.log(msg);
+
+                                inputMessage.channel.send(today);
+                                console.log('done');
+                                return true;
+                            });
+                        }
+                        if(extra[0] === 'overmorgen'){
+                            ical.fromURL(calendar.urls[0].url, {}, function(err, data) {
+
+                                let date = new Date();
+                                date.setDate(date.getDate() + 2);
+                                let today = 'Les morgen (';
+                                today += date.getDate();
+                                today += "-";
+                                today += months[date.getMonth()];
+                                today += "):\n";
+                                let msg = MessageHandler.getMessage(date, data).toString();
+                                if(msg === '```css\n```'){
+                                    today += "Geen les!\n ╯°□°）╯┻━┻"
+                                }
+                                else{
+                                    today += msg;
+                                }
+                                today += getEdits(date.getDate(), date.getMonth()+1);
 
                                 console.log(msg);
 
@@ -661,7 +471,6 @@ function execComand(inputMessage){
                                 for(j=0; j<5; j++){
                                     let dag = maandag + j;
                                     let maand = d.getMonth()+1;
-
                                     let jaar = d.getFullYear();
 
                                     switch(maand){
@@ -698,9 +507,11 @@ function execComand(inputMessage){
                                     }
 
                                     today += '__**' + days[j] + '**__';
-                                    today += ': (' + dag + '-' + maand + ')\n';
-
-                                    let msg = getMessage(dag, maand-1, data).toString();
+                                    today += ': (' + dag + '-' + months[maand-1] + ')\n';
+                                    let date = new Date();
+                                    date.setDate(dag);
+                                    date.setMonth(maand-1);
+                                    let msg = MessageHandler.getMessage(date, data).toString();
                                     if(msg === '```css\n```'){
                                         today += "Geen les!\n ╯°□°）╯┻━┻"
                                     }
@@ -750,7 +561,7 @@ function execComand(inputMessage){
                                     let today = 'Lesweek: (';
                                     today += maandag;
                                     today += "-";
-                                    today += month;
+                                    today += months[month-1];
                                     today += ' tot ';
                                     today += maandag+6;
                                     today += "-";
@@ -797,10 +608,13 @@ function execComand(inputMessage){
                                         }
 
                                         today += '__**' + days[j] + '**__';
-                                        today += ': (' + dag + '-' + maand + ')\n';
+                                        today += ': (' + dag + '-' + months[maand] + ')\n';
 
                                         console.log(dag,maand-1);
-                                        let msg = getMessage(dag, maand-1, data).toString();
+                                        let date = new Date();
+                                        date.setDate(dag);
+                                        date.setMonth(maand-1);
+                                        let msg = MessageHandler.getMessage(date, data).toString();
                                         if(msg === '```css\n```'){
                                             today += "Geen les!\n ╯°□°）╯┻━┻";
                                         }
