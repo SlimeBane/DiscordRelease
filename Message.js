@@ -1,7 +1,7 @@
-/*
+
 const calendar = require('./calendar.json');
 const ical = require('ical');
-*/
+
 
 module.exports = {
     getMessage,
@@ -129,6 +129,7 @@ function getMessage(date, data){
                                 ev.location);
 
                             line += ev.summary;
+                            line += " in " + ev.location;
                             line += " at ";
                             let tim = ev.start.toString().substring(16, 21);
                             line += ':' + tim;
@@ -146,6 +147,7 @@ function getMessage(date, data){
                                 ev.location);
 
                             line += ev.summary;
+                            line += " in " + ev.location;
                             line += " at ";
                             // var temp = ev.start
                             let tim = ev.start.toString().substring(16, 21);
@@ -163,6 +165,7 @@ function getMessage(date, data){
                                 ev.location);
 
                             line += ev.summary;
+                            line += " in " + ev.location;
                             line += " at ";
                             // var temp = ev.start
                             let tim = ev.start.toString().substring(16, 21);
@@ -189,6 +192,7 @@ function getMessage(date, data){
                         ev.dtstamp);
 
                     line += ev.summary;
+                    line += " in " + ev.location;
                     line += " at ";
                     // var temp = ev.start
                     let tim = ev.start.toString().substring(16, 21);
@@ -253,10 +257,9 @@ function getMessage(date, data){
 }
 
 // Message tests
-/*
+
 ical.fromURL(calendar.urls[0].url, {}, function(err, data) {
     let date = new Date();
     date.setDate(date.getDate()+2);
     console.log(getMessage(date, data));
 });
-*/
