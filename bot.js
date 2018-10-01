@@ -434,7 +434,7 @@ function execComand(inputMessage){
 
                                 let date = new Date();
                                 date.setDate(date.getDate() + 2);
-                                let today = 'Les morgen (';
+                                let today = 'Les overmorgen (';
                                 today += date.getDate();
                                 today += "-";
                                 today += months[date.getMonth()];
