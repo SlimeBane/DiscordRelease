@@ -226,12 +226,13 @@ function removeEdit(day, month){
     let removed = 'Removed:\n';
     for (let i=0; i<lines.length; i++){
         console.log(lines[i].substring(0,5));
-        if(lines[i].substring(0,5) !== date ){
-            newdata += lines[i] + '\r\n';
+        // TODO check for indiv msg
+        if(lines[i].substring(0,5) === date ){
+            removed += lines[i] + '\n';
+            console.log("removed", lines[i]);
         }
         else{
-            console.log("removed", lines[i]);
-            removed += lines[i] + '\n'
+            newdata += lines[i] + '\r\n'
         }
     }
 

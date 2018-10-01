@@ -1,3 +1,8 @@
+/*
+const calendar = require('./calendar.json');
+const ical = require('ical');
+*/
+
 module.exports = {
     getMessage,
     getMaandag
@@ -118,7 +123,6 @@ function getMessage(date, data){
                         //console.log('weekdays are equal')
                         // make sure the repeat end occurs after currentDate
                         if(rruleyear > currentDate.getFullYear()){
-                            console.log('yaaay');
                             console.log("Conference",
                                 ev.summary,
                                 'is in',
@@ -136,7 +140,6 @@ function getMessage(date, data){
                         }
 
                         else if(rrulemonth > currentDate.getMonth() && rruleyear === currentDate.getFullYear()){
-                            console.log('yaaay');
                             console.log("Conference",
                                 ev.summary,
                                 'is in',
@@ -154,7 +157,6 @@ function getMessage(date, data){
                             console.log('month based')
                         }
                         else if(rruleday > currentDate.getDate() && rrulemonth === currentDate.getMonth() && rruleyear === currentDate.getFullYear()){
-                            console.log('yaaay');
                             console.log("Conference",
                                 ev.summary,
                                 'is in',
@@ -169,7 +171,7 @@ function getMessage(date, data){
 
                             arr[i] = line;
                             i++;
-                            console.log(rruleday, day);
+                            // console.log(rruleday, currentDate.getDate());
                             console.log('Day based')
                         }
 
@@ -222,7 +224,7 @@ function getMessage(date, data){
             let elemHour = parseInt(elemTime[0]);
             let elemMinute = parseInt(elemTime[1]);
 
-            console.log(hour, elemHour);
+            // console.log(hour, elemHour);
             if(hour === elemHour && minute === elemMinute){
                 added = true;
                 break;
@@ -230,7 +232,7 @@ function getMessage(date, data){
             if(hour < elemHour){
                 sortedarr.splice(i, 0, arr[l]);
                 added = true;
-                console.log('addde', arr[l]);
+                console.log('added', arr[l]);
                 break;
             }
         }
@@ -246,6 +248,15 @@ function getMessage(date, data){
     }
     txt += '```';
     console.log(sortedarr);
-    console.log(txt);
+    // console.log(txt);
     return txt;
 }
+
+// Message tests
+/*
+ical.fromURL(calendar.urls[0].url, {}, function(err, data) {
+    let date = new Date();
+    date.setDate(date.getDate()+2);
+    console.log(getMessage(date, data));
+});
+*/
