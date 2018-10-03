@@ -299,11 +299,13 @@ function execComand(inputMessage){
         let cmd = args[0];
         d = new Date();
         args = args.splice(1);
+        cmd = cmd.toLocaleLowerCase();
         switch(cmd) {
             // !ping
             case 'ping':
                 inputMessage.channel.send('Pong!');
                 break;
+                /*
             case 'deadline':
                 switch(args.length) {
                     case 0:
@@ -337,7 +339,14 @@ function execComand(inputMessage){
                         return true;
                 }
 
-                break;
+                break; */
+            case 'help':
+                inputMessage.channel.send('Command List:');
+                inputMessage.channel.send('!les (optional: [Date])\n!les week (optional: [Date])\n!les morgen\n!les add [Date] [Message]\n!les [\'rm\' || \'remove\' || \'del\' || \'delete\'] [Date]')
+                inputMessage.channel.send('!deadline add [Time + Date] [Vak] [Message]\n!deadline ls \n!deadline [\'rm\' || \'remove\' || \'del\' || \'delete\'] [Time + Date]\n!deadline vak');
+                inputMessage.channel.send('Date is always in this format: day-month.\nTime + Date is always in this format: minute-hour-day-month[optional: -year]. ');
+                return true;
+
             case 'les':
                 console.log(args.length);
                 if(args.length === 0){
@@ -456,15 +465,15 @@ function execComand(inputMessage){
                             });
                         }
                         if(extra[0] === 'week'){
-                            let maandag = getMaandag();
+                            let maandag = MessageHandler.getMaandag();
                             console.log('in extra === week');
                             ical.fromURL(calendar.urls[0].url, {}, function(err, data) {
                                 let today = 'Lesweek: (';
-                                today += getMaandag();
+                                today += MessageHandler.getMaandag();
                                 today += "-";
                                 today += d.getMonth()+1;
                                 today += ' tot ';
-                                today += getMaandag()+6;
+                                today += MessageHandler.getMaandag()+6;
                                 today += "-";
                                 today += d.getMonth()+1;
                                 today += ')\n';
