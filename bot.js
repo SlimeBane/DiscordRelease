@@ -11,6 +11,7 @@ const fdays = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'
 d = new Date();
 const fs = require('fs');
 const MessageHandler = require('./Message');
+const inputValidator = require('./InputValidator');
 
 
 var jobs = [];
@@ -383,6 +384,11 @@ function execComand(inputMessage){
                             ical.fromURL(calendar.urls[0].url, {}, function(err, data) {
                                 let dag = parseInt(extra[0]);
                                 let maand = parseInt(extra[1]);
+                                if (!inputValidator.validateInputDate(dag, maand, d.getFullYear())){
+                                    inputMessage.channel.send('Slechte datum');
+                                    return false;
+                                }
+
                                 let date = new Date(d.getFullYear(), maand-1, dag);
                                 let today = 'Les op ';
                                 today += date.getDate();
@@ -561,6 +567,10 @@ function execComand(inputMessage){
                             if(time.length === 2){
                                 let day = parseInt(time[0]);
                                 let month = parseInt(time[1]);
+                                if (!inputValidator.validateInputDate(day, month, d.getFullYear())){
+                                    inputMessage.channel.send('Foute kut datum');
+                                    return false;
+                                }
                                 console.log(time, day, month);
                                 let maandag = getMaandagFromAny(day, month);
 
@@ -678,6 +688,8 @@ function execComand(inputMessage){
 
 
                 break;
+            default:
+                inputMessage.channel.send("Invalid command pls try again");
 
         }
     }
