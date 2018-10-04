@@ -1,0 +1,4 @@
+{
+  "help": "Command List:\n!les (optional: [Date])\n!les week (optional: [Date])\n!les morgen\n!les add [Date] [Message]\n!les ['rm' || 'remove' || 'del' || 'delete'] [Date]\n!deadline add [Time + Date] [Vak] [Message]\n!deadline ls \n!deadline ['rm' || 'remove' || 'del' || 'delete'] [Time + Date]\n!deadline vak\nDate is always in this format: day-month.\nTime + Date is always in this format: minute-hour-day-month[optional: -year]. ",
+  "failedhelp": "Hi how can I help you?\nFor help mention me and type 'help'."
+}

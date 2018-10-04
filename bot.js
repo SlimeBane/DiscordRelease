@@ -11,7 +11,7 @@ const fdays = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'
 d = new Date();
 const fs = require('fs');
 const MessageHandler = require('./Message');
-const MessageJson = require('txt');
+const MessageJson = require('./txt');
 
 var jobs = [];
 var deadlines = [];
@@ -349,7 +349,6 @@ function execComand(inputMessage){
                 if(args.length === 0){
                     // les vandaag
                     ical.fromURL(calendar.urls[0].url, {}, function(err, data) {
-                        console.log('No extra Arguments');
                         let today = d.getDate().toString();
                         today += '- ';
                         today += months[d.getMonth()];
