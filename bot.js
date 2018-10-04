@@ -681,6 +681,14 @@ function execComand(inputMessage){
 
         }
     }
+    viezeGif = "giphy";
+    if (message.includes(viezeGif)){
+        message.delete()
+    }
+    viezeGif = "tenor";
+    if (message.includes(viezeGif)){
+        message.delete()
+    }
     /*
     if (message === 'Waar zijn die handjes?'){
         inputMessage.channel.send(':raised_hands: :raised_hands: :raised_hands:');
