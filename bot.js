@@ -11,7 +11,7 @@ const fdays = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'
 d = new Date();
 const fs = require('fs');
 const MessageHandler = require('./Message');
-
+const MessageJson = require('txt');
 
 var jobs = [];
 var deadlines = [];
@@ -267,32 +267,32 @@ function schrikkeljaar(jaar){
 
 }
 
+function help(inputMessage) {
+    let message = inputMessage.content;
+    console.log(message.split(' ').length);
+    if(message.split(' ').length !== 2){
+        inputMessage.channel.send(MessageJson.failedhelp);
+        return true;
+    }
+    if(message.split(' ')[1].toLowerCase() === 'help'){
+        inputMessage.channel.send(MessageJson.help);
+        return true;
+    }
+    else{
+        inputMessage.channel.send(MessageJson.failedhelp);
+        return true;
+    }
+}
+
 
 function execComand(inputMessage){
     // Our bot needs to know if it will execute a command
     // It will listen for messages that will start with `!`
 
     let message = inputMessage.content;
-    console.log(message);
     //console.log(inputMessage.channel)
     if(inputMessage.isMentioned(bot.user)){
-        console.log(message);
-        console.log(message.split(' ').length);
-        if(message.split(' ').length !== 2){
-            inputMessage.channel.send('Hi how can I help you?\nFor help mention me and type \'help\'.');
-            return true;
-        }
-        if(message.split(' ')[1].toLowerCase() === 'help'){
-            inputMessage.channel.send('Command List:');
-            inputMessage.channel.send('!les (optional: [Date])\n!les week (optional: [Date])\n!les morgen\n!les add [Date] [Message]\n!les [\'rm\' || \'remove\' || \'del\' || \'delete\'] [Date]')
-            inputMessage.channel.send('!deadline add [Time + Date] [Vak] [Message]\n!deadline ls \n!deadline [\'rm\' || \'remove\' || \'del\' || \'delete\'] [Time + Date]\n!deadline vak');
-            inputMessage.channel.send('Date is always in this format: day-month.\nTime + Date is always in this format: minute-hour-day-month[optional: -year]. ');
-            return true;
-        }
-        else{
-            inputMessage.channel.send('Hi how can I help you?\nFor help mention me and type \'help\'.');
-            return true;
-        }
+        help(inputMessage)
     }
     if (message.substring(0, 1) === '!') {
         let args = message.substring(1).split(' ');
@@ -341,10 +341,7 @@ function execComand(inputMessage){
 
                 break; */
             case 'help':
-                inputMessage.channel.send('Command List:');
-                inputMessage.channel.send('!les (optional: [Date])\n!les week (optional: [Date])\n!les morgen\n!les add [Date] [Message]\n!les [\'rm\' || \'remove\' || \'del\' || \'delete\'] [Date]')
-                inputMessage.channel.send('!deadline add [Time + Date] [Vak] [Message]\n!deadline ls \n!deadline [\'rm\' || \'remove\' || \'del\' || \'delete\'] [Time + Date]\n!deadline vak');
-                inputMessage.channel.send('Date is always in this format: day-month.\nTime + Date is always in this format: minute-hour-day-month[optional: -year]. ');
+                help(inputMessage);
                 return true;
 
             case 'les':
