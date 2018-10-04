@@ -681,13 +681,13 @@ function execComand(inputMessage){
 
         }
     }
-    viezeGif = "giphy";
+    let viezeGif = "giphy";
     if (message.includes(viezeGif)){
-        message.delete()
+        message.delete().catch()
     }
     viezeGif = "tenor";
     if (message.includes(viezeGif)){
-        message.delete()
+        message.delete().catch()
     }
     /*
     if (message === 'Waar zijn die handjes?'){
