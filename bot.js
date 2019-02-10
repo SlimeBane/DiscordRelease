@@ -20,6 +20,26 @@ var deadlines = [];
 
 // Configure logger settings
 
+
+// Check Internet Connection
+function checkInternet(cb) {
+    require('dns').lookup('google.com', function (err) {
+        if (err && err.code === "ENOTFOUND") {
+            cb(false);
+        } else {
+            cb(true);
+        }
+    })
+}
+
+while (true) {
+    checkInternet(function (isConnected) {
+        if (isConnected) {
+            break;
+        }
+    })
+}
+
 // Initialize Discord Bot
 var bot = new Discord.Client();
 
