@@ -22,22 +22,18 @@ var deadlines = [];
 
 
 // Check Internet Connection
-function checkInternet(cb) {
+function checkInternet() {
     require('dns').lookup('google.com', function (err) {
         if (err && err.code === "ENOTFOUND") {
-            cb(false);
+            return false;
         } else {
-            cb(true);
+            return true;
         }
     })
 }
 
 while (true) {
-    checkInternet(function (isConnected) {
-        if (isConnected) {
-            break;
-        }
-    })
+    if (checkInternet()) break;
 }
 
 // Initialize Discord Bot
