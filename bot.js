@@ -21,21 +21,6 @@ var deadlines = [];
 // Configure logger settings
 
 
-// Check Internet Connection
-function checkInternet() {
-    require('dns').lookup('google.com', function (err) {
-        if (err && err.code === "ENOTFOUND") {
-            return false;
-        } else {
-            return true;
-        }
-    })
-}
-
-while (true) {
-    if (checkInternet()) break;
-}
-
 // Initialize Discord Bot
 var bot = new Discord.Client();
 
