@@ -253,6 +253,7 @@ function getMessage(date, data){
     txt += '```';
     console.log(sortedarr);
     // console.log(txt);
+    txt.replace(/[\(.*\)]/, '');
     return txt;
 }
 
